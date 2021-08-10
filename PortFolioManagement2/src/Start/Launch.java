@@ -3,7 +3,9 @@ package Start;
 import View.TheLayout;
 
 import javax.swing.*;
-
+/**
+*	 @author: Yvanroan
+ */
 public class Test {
 	
 	public static void main(String[] args) {
@@ -13,10 +15,6 @@ public class Test {
 				new TheLayout();
 			}
 		});
-/*
-			Home home = new Home();
-		MainFrame mf = new MainFrame();
-		*/
 	}
 }
 

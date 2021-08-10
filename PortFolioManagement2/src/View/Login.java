@@ -12,9 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SecondPanel extends JPanel implements ActionListener {
-	
-	protected JLabel msg;
-	protected JButton login = new JButton("SE CONNECTER");
+
+	protected JButton login = new JButton("LOGIN");
 	protected Font font_tf = new Font("Times New Roman", Font.BOLD, 18);
 	protected Color bg_field = new Color(240, 240, 240);
 	protected JTextField login_username;
@@ -36,42 +35,66 @@ public class SecondPanel extends JPanel implements ActionListener {
 		CreateImage Imgcreator = new CreateImage(1000, 740);
 		Imgcreator.setImg(new ImageIcon("mesImages/registration.jpg"));
 		JLabel background = Imgcreator.generate();
-		background.setBounds(0, 0, 1000, 740);
+		background.setBounds(0, 0, 1100, 740);
 		background.setLayout(null);
+		Font labelFont = new Font("Californian FB", Font.BOLD, 18);
 		
-		JLabel login_lab = new JLabel("SE CONNECTER A UN COMPTE");
+		JLabel login_lab = new JLabel("LOGIN");
 		
 		login_lab.setFont(new Font("Californian FB", Font.BOLD, 24));
 		login_lab.setForeground(Color.black);
-		login_lab.setBounds(350, 50, 350, 100);
+		login_lab.setBounds(550, 80, 350, 100);
 		
-		JPanel login_form = new JPanel();
-		login_form.setLayout(new GridLayout(3, 1, 0, 30));
-		login_form.setBounds(300, 200, 400, 300);
-		login_form.setBorder(new EmptyBorder(50, 30, 50, 30));
-		login_form.setBackground(new Color(0, 0, 0, 80));
+//		JPanel login_form = new JPanel();
+//		login_form.setLayout(new GridLayout(3, 1, 0, 30));
+//		login_form.setBounds(300, 200, 400, 300);
+//		login_form.setBorder(new EmptyBorder(50, 30, 50, 30));
+//		login_form.setBackground(new Color(0, 0, 0, 80));
+
+		JPanel form = new JPanel();
+		form.setLayout(new GridLayout(2, 2, 0, 30));
+		form.setBounds(400, 200, 400, 150);
+		form.setBorder(new EmptyBorder(30, 0, 30, 15));
+		form.setBackground(new Color(0, 0, 0, 80));
+
+
+		JLabel username = new JLabel("Username ",JLabel.CENTER);
+		username.setForeground(Color.black);
+		username.setFont(labelFont);
+		JLabel password = new JLabel("password ",JLabel.CENTER);
+		password.setForeground(Color.black);
+		password.setFont(labelFont);
 		
-		login_username = new JTextField("nom d'utilisateur");
+		login_username = new JTextField();
 		login_username.setBorder(new EmptyBorder(0, 10, 0, 10));
 		login_username.setFont(new Font("Times New Roman", Font.ITALIC, 19));
 		login_username.setBackground(new Color(240, 240, 240));
 		
-		login_password = new JPasswordField("password");
+		login_password = new JPasswordField();
 		login_password.setBorder(new EmptyBorder(0, 10, 0, 10));
 		login_password.setFont(new Font("Times New Roman", Font.ITALIC, 19));
 		login_password.setBackground(new Color(240, 240, 240));
-		
+
+		JPanel login_but = new JPanel();
+		login_but.setLayout(null);
+		login_but.setBounds(500, 400, 160, 50);
 		login.setFont(font_tf);
+		login.setBounds(0, 0, 160, 50);
 		login.setBackground(new Color(66, 139, 202));
 		login.setForeground(Color.WHITE);
 		login.addActionListener(this);
-		
-		login_form.add(login_username);
-		login_form.add(login_password);
-		login_form.add(login);
+
+		form.add(username);
+		form.add(login_username);
+		form.add(password);
+		form.add(login_password);
+
+		login_but.add(login);
 		
 		background.add(login_lab);
-		background.add(login_form);
+		background.add(form);
+		background.add(login_but);
+
 		
 		this.add(background);
 	}
@@ -87,6 +110,7 @@ public class SecondPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		JButton btnSource = (JButton) e.getSource();
+
 		
 		if (btnSource == login) {
 			dialog_error = new JOptionPane();

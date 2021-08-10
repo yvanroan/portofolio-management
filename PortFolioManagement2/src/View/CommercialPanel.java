@@ -22,14 +22,12 @@ import java.util.List;
 
 public class MenuPanel extends JPanel implements ActionListener {
 	
-	protected JPanel container, content, menu, mncpte, addcl, updatecl, consultcl, rdv, lsvisites, infoscl, profile, inftable, vistable;
-	protected JTextField com_namef, com_surnamef, com_passf, com_conpassf, com_phonef, cl_namef, cl_surnamf, cl_passf, cl_conpassf, sexf,
-	rdvIdCl, rdvDate, rdvgoal;
+	protected JPanel container, mncpte, addcl, updatecl, rdv, lsvisites, infoscl, profile, inftable, vistable;
+	protected JTextField com_namef, com_surnamef, com_passf, com_conpassf, com_phonef, rdvIdCl, rdvDate, rdvgoal;
 	protected JTabbedPane thumbnail;
 	protected JLabel profile_img, profile_title, prof_img;
 	protected Commercial com;
-	private String[] tabs = {"Mon compte", "Ajouter client", "Modifier client", "Consulter client", "visiter client", "Liste Visites", "Infos clients"};
-	protected JPanel[] panels = {mncpte, addcl, updatecl, consultcl, rdv, lsvisites, infoscl};
+	private String[] tabs = {"Mon compte", "Ajouter client", "Modifier client", "visiter client", "Liste Visites", "Infos clients"};
 	protected JButton edit, signup, info, visite, rdvbtn;
 	private Color menuBg = new Color(184, 207, 229);
 	protected int state = 0;
@@ -38,7 +36,9 @@ public class MenuPanel extends JPanel implements ActionListener {
 	protected JTable inftab, vistab;
 	protected JTextArea txtarea;
 	CreateImage ic;
-	
+	private int IDcom;
+	private String passwordCom;
+
 	public MenuPanel() {
 		
 		this.setLayout(null);
@@ -90,8 +90,6 @@ public class MenuPanel extends JPanel implements ActionListener {
 		addcl.setBackground(menuBg);
 		updatecl = new JPanel();
 		updatecl.setBackground(menuBg);
-//		consultcl = new JPanel();
-//		consultcl.setBackground(menuBg);
 		rdv = new JPanel();
 		rdv.setBackground(menuBg);
 		lsvisites = new JPanel();
@@ -342,7 +340,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 		infos.setBounds(20, 10, 900, 110);
 		
 		JLabel infosLab = new JLabel("Bien vouloir cliquer sur le boutton ci-dessous afin d'obtenir la liste "
-				+ "des clients des différents commerciaux", JLabel.CENTER);
+				+ "des clients", JLabel.CENTER);
 		infosLab.setBounds(40, 20, 800, 20);
 		infosLab.setFont(new Font("Serif", Font.ITALIC, 18));
 		
@@ -360,7 +358,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 		inftable.setBackground(Color.white);
 		inftable.setBorder(new EmptyBorder(10, 10, 10, 10));
 		
-		String[] inftitle = {"IDclient", "Nom", "Prénom", "Adresse", "Localisation", "IDCom", "NomCom", "PrénomCom"};
+		String[] inftitle = {"IDclient", "Nom", "Prénom", "Adresse", "Phone"};
 		Object[][] infdata = {};
 		inftab = new JTable(infdata, inftitle);
 		JScrollPane scrollinfo = new JScrollPane(inftab);
@@ -511,7 +509,6 @@ public class MenuPanel extends JPanel implements ActionListener {
 		thumbnail.addTab(tabs[0], mncpte);
 		thumbnail.addTab(tabs[1], addcl);
 		thumbnail.addTab(tabs[2], updatecl);
-//		thumbnail.addTab(tabs[3], consultcl);
 		thumbnail.addTab(tabs[3], rdv);
 		thumbnail.addTab(tabs[4], lsvisites);
 		thumbnail.addTab(tabs[5], infoscl);
@@ -536,53 +533,53 @@ public class MenuPanel extends JPanel implements ActionListener {
 		com_namef.setText(com.getName());
 		com_surnamef.setText(com.getSurname());
 		com_phonef.setText(String.valueOf(com.getPhone()));
+		passwordCom = com.getPassword();
+		IDcom= com.getIdCom();
 	}
 	
 	public void actionPerformed (ActionEvent e) {
-		
+
 		JButton btnSource = (JButton)e.getSource();
-		
+
 		if (btnSource == edit) {
 			JFileChooser chooser = new JFileChooser();
 			chooser.showOpenDialog(null);
 			File f = chooser.getSelectedFile();
 			String filename = f.getAbsolutePath();
 			com.setProfileC(filename);
-			comManager.update(com);		
+			comManager.update(com);
 			profile_img.setIcon(new ImageIcon(filename));
 			prof_img.setIcon(new ImageIcon(filename));
-			setState(2);
 		}
-		
+
 		if (btnSource == info) {
 			Object[][] data = {};
-		String[] inftitle = {"IDclient", "Nom", "Prénom", "Adresse", "Phone", "IDCom", "NomCom", "PrénomCom"};
-//			String[] inftitle = {"IDclient", "Nom", "Prénom", "Adresse", "Phone"};
+		String[] inftitle = {"IDclient","First Name", "Last Name", "Adresse", "Phone"};
 			DefaultTableModel rows = new DefaultTableModel(data, inftitle);
 			ClientModel clientManager = new ClientModel();
 			List <Client> listcl = clientManager.findAll();
-			
+
 			for (Client cl: listcl) {
 				Commercial clCom;
 				clCom = comManager.find(cl.getIdCom());
 				rows.addRow(new Object[] {cl.getIdClient(), cl.getName(), cl.getSurname(), cl.getAddress(), cl.getPhone()}
-				); 
+				);
 			}
-			
+
 			inftab.setModel(rows);
-			
+
 		}
-		
+
 		if (btnSource == visite) {
 			com = new Commercial();
-			com.setIdCom(1);
-			String[] title = {"IDclient", "Name", "Surname", "Adress", "Phone", "goal"};
+			com.setIdCom(IDcom);
+			String[] title = {"IDclient", "First Name", "Last Name", "Adress", "Phone", "Period", "goal"};
 			Object[][] data = {};
 			DefaultTableModel rows = new DefaultTableModel(data, title);
 			ClientModel clientManager = new ClientModel();
 			VisitModel visitManager = new VisitModel();
 			List <Visit> listvis = visitManager.find(com);
-			
+
 			for(Visit vs: listvis) {
 				Client cl;
 				cl = clientManager.find(vs.getIdCl());
@@ -591,7 +588,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 			}
 			vistab.setModel(rows);
 		}
-		
+
 		if (btnSource == signup) {
 //			if( ==com_passf.getText() && com_passf.getText()==com_conpassf.getText()) {
 
@@ -612,7 +609,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 
 				if (confirm == JOptionPane.OK_OPTION) {
 					System.out.println(confirm+ "=" +confirm_pass);
-					if (password.equals(confirm_pass) && com.getPassword().equals(password)) {
+					if (password.equals(confirm_pass) && passwordCom.equals(password)) {
 
 						sgf = new SignupForm();
 
@@ -641,13 +638,13 @@ public class MenuPanel extends JPanel implements ActionListener {
 				}
 		}
 		if (btnSource == rdvbtn) {
-			
+
 			String dte, goal, comment, error = "";
 			int id = 0;
 			Timestamp ts = null;
-			
+
 			SignupForm sgf = new SignupForm();
-			
+
 			if (sgf.isNumeric(rdvIdCl.getText())) {
 				id = Integer.valueOf(rdvIdCl.getText().trim());
 			}
@@ -661,7 +658,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 			}
 			dte = rdvDate.getText();
 			String extractDate = dte.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
-			
+
 			if (extractDate == null) {
 				error += "Vous devez absolument préciser la date de votre visite" + "\n";
 			}
@@ -681,7 +678,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 				}
 				else {}
 			}
-			
+
 			goal = rdvgoal.getText().trim();
 			if (sgf.isNumeric(goal)) {
 				error += "Le but de votre visite doit contenir des caractères et non des chiffres" + "\n";
@@ -695,14 +692,14 @@ public class MenuPanel extends JPanel implements ActionListener {
 				}
 				else {}
 			}
-			
+
 			dialog_error = new JOptionPane();
 			dialog_confirm = new JOptionPane();
 			dialog_success = new JOptionPane();
-			
-			int confirm = dialog_confirm.showConfirmDialog(null, "Voulez-vous vraiment confirmer??", "Soumission du formulaire", 
+
+			int confirm = dialog_confirm.showConfirmDialog(null, "Voulez-vous vraiment confirmer??", "Soumission du formulaire",
 					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-			
+
 			if (confirm == JOptionPane.OK_OPTION) {
 				if (error.length() > 0) {
 					dialog_error.showMessageDialog(null, error, "Erreur", JOptionPane.ERROR_MESSAGE);

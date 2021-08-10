@@ -1,14 +1,8 @@
 package View;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 
 public class Home extends JFrame {
 	
@@ -30,20 +24,19 @@ public class Home extends JFrame {
 		sps.setLayout(new BorderLayout());
 		sps.add(pan);
 		sps.add(pgb, BorderLayout.SOUTH);
-		this.setVisible(true);
 		progress();
 	}
 	
 	public void progress() {
-		
+		this.setVisible(true);
 		for(int i = 0; i <= 100; i++) {
 			pgb.setValue(i);
 			Random rand = new Random();
 			int n = rand.nextInt(200);
 			if (i == 100) {
 				this.setVisible(false);
-				MainFrame main = new MainFrame();
-				main.setVisible(true);
+				TheLayout main = new TheLayout();
+				main.frame.setVisible(true);
 			}
 			pgb.repaint();
 			
